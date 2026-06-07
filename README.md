@@ -1,24 +1,26 @@
 # Elite Chile RP Bot
 
-Bot base limpio y profesional para la comunidad **Elite Chile Roleplay**.
+Bot limpio y profesional para **Elite Chile Roleplay**.
 
-## Sistema DNI implementado
+## Comandos actuales
 
-### Comandos disponibles:
-
+### Civiles
 - `ch!dni crear Nombre completo, DD/MM/AAAA, Sexo, Nacionalidad`
-  Ejemplo: `ch!dni crear Jesus Matias Luz Martinez, 15/03/1995, Masculino, Chilena`
+- `ch!dni info`
+- `ch!dni buscar @usuario` / `ch!dni buscar Nombre`
 
-- `ch!dni info` → Muestra tu DNI registrado
+### Staff
+- `ch!ayuda` muestra sección especial si tienes el rol de staff
 
-- `ch!dni buscar @usuario` → Muestra el DNI de otra persona
+## Sistema de roles
+Al crear un DNI con `ch!dni crear`, el bot asigna automáticamente el rol de Civil (configúralo en `.env` con `CIVIL_ROLE_ID`).
 
-- `ch!dni buscar Nombre` → Busca por nombre
+## Validación de fecha
+La fecha ahora se valida como fecha real (no permite fechas futuras ni inválidas).
 
-### Base de datos
-Se guarda en `data/dnis.json` (JSON simple y limpio).
-
-### Estilo
-Diseño limpio, profesional, sin emojis excesivos ni estilo IA.
-
-El bot usa prefijo `ch!` tal como pediste.
+## Configuración
+Agrega en tu `.env`:
+```
+CIVIL_ROLE_ID=ID_DEL_ROL_CIVIL
+STAFF_ROLE_ID=1508320073784496159
+```
