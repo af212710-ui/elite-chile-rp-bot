@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const { isStaff } = require('../utils/permissions');
+const colors = require('../config/colors');
 
 module.exports = {
   name: 'ayuda',
@@ -8,7 +9,7 @@ module.exports = {
     const staff = isStaff(message.member);
 
     const embed = new EmbedBuilder()
-      .setColor('#2C3E50')
+      .setColor(colors.primary)
       .setTitle('📋 Ayuda - Elite Chile RP')
       .setDescription('Comandos disponibles del bot');
 

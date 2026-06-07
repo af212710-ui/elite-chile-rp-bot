@@ -1,5 +1,6 @@
 const { getBalance } = require('../utils/database');
 const { EmbedBuilder } = require('discord.js');
+const colors = require('../config/colors');
 
 module.exports = {
   name: 'bal',
@@ -11,8 +12,8 @@ module.exports = {
     const total = balance.cash + balance.bank;
 
     const embed = new EmbedBuilder()
-      .setColor('#2C3E50')
-      .setTitle(`Economía de ${message.author.username}`)
+      .setColor(colors.economy)
+      .setTitle(`💰 Economía de ${message.author.username}`)
       .addFields(
         { name: '💵 Cartera (Cash)', value: `$${balance.cash.toLocaleString()}`, inline: true },
         { name: '🏦 Banco', value: `$${balance.bank.toLocaleString()}`, inline: true },

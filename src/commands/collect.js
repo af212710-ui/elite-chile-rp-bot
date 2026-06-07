@@ -1,10 +1,9 @@
 const { getBalance, addCash, canCollect, updateLastCollect } = require('../utils/database');
 const { EmbedBuilder } = require('discord.js');
+const colors = require('../config/colors');
 
-// Función para obtener el sueldo más alto del usuario según sus roles
 function getHighestSalary(member) {
   let highest = 0;
-
   for (const role of member.roles.cache.values()) {
     const match = role.name.match(/\((\d+[,.]?\d*)\)/);
     if (match) {
@@ -36,7 +35,7 @@ module.exports = {
     updateLastCollect(userId);
 
     const embed = new EmbedBuilder()
-      .setColor('#27AE60')
+      .setColor(colors.success)
       .setTitle('💰 Sueldo Recogido')
       .setDescription(`Recibiste **$${salary.toLocaleString()}** en tu cartera.`)
       .setFooter({ text: 'Vuelve en 4 horas' });

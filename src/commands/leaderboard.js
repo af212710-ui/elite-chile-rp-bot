@@ -1,5 +1,6 @@
 const { getTopUsers } = require('../utils/database');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const colors = require('../config/colors');
 
 const USERS_PER_PAGE = 10;
 
@@ -7,7 +8,7 @@ module.exports = {
   name: 'leaderboard',
   description: 'Muestra el top de usuarios más ricos con paginación',
   execute: async (message, args, client) => {
-    const allUsers = getTopUsers(1000); // Traemos hasta 1000 usuarios
+    const allUsers = getTopUsers(1000);
     if (allUsers.length === 0) {
       return message.reply('Aún no hay datos de economía.');
     }
@@ -41,10 +42,10 @@ module.exports = {
       }
 
       return new EmbedBuilder()
-        .setColor('#F1C40F')
+        .setColor(colors.economy)
         .setTitle('🏆 Leaderboard - Elite Chile RP')
         .setDescription(description || 'No hay usuarios en esta página.')
-        .setFooter({ text: `Página ${page} de ${totalPages} • Total: ${allUsers.length} usuarios` });
+        .setFooter({ text: `Ágina ${page} de ${totalPages} • Total: ${allUsers.length} usuarios` });
     };
 
     const embed = await generateEmbed(currentPage);
@@ -66,7 +67,7 @@ module.exports = {
 
     const collector = reply.createMessageComponentCollector({
       filter: i => i.user.id === message.author.id,
-      time: 120000 // 2 minutos
+      time: 120000
     });
 
     collector.on('collect', async i => {
