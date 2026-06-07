@@ -1,16 +1,23 @@
 # Elite Chile RP Bot
 
-## Comando Staff: ch!msg
+## IA con Groq (Gratis)
 
-`ch!msg Tu mensaje aquí`
+El bot usa **Groq** (totalmente gratis) para el comando `ch!ia`.
 
-- El bot borra tu mensaje original
-- Envía el texto como si lo estuviera diciendo el bot
-- Solo disponible para miembros del staff
+### Configuración
 
-Ejemplo:
+1. Crea cuenta gratis en: https://console.groq.com
+2. Genera tu API Key
+3. Agrega en las variables de entorno:
+
+```env
+XAI_API_KEY=gsk_tu_clave
+AI_MODEL=llama-3.1-70b-versatile
+AI_BASE_URL=https://api.groq.com/openai/v1
 ```
-ch!msg Bienvenidos al servidor
-```
-El bot borrará tu mensaje y dirá:
-**Bienvenidos al servidor**
+
+### Comandos de IA
+- `ch!ia Tu mensaje`
+- `ch!ia limpiar` - Borra la memoria de conversación
+
+La IA recuerda la conversación reciente de forma gratuita.
