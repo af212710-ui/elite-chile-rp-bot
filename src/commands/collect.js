@@ -2,14 +2,17 @@ const { getBalance, addCash, canCollect, updateLastCollect } = require('../utils
 const { EmbedBuilder } = require('discord.js');
 const colors = require('../config/colors');
 const { createProgressBar } = require('../utils/progressBar');
+const salaries = require('../config/salaries');
 
 function getHighestSalary(member) {
   let highest = 0;
-  for (const role of member.roles.cache.values()) {
-    const match = role.name.match(/\((\d+[,.]?\d*)\)/);
-    if (match) {
-      const amount = parseInt(match[1].replace(/[,.]/g, ''));
-      if (amount > highest) highest = amount;
+
+  for (const roleId of Object.keys(salaries)) {
+    if (member.roles.cache.has(roleId)) {
+      const amount = salaries[roleId];
+      if (amount > highest) {
+        highest = amount;
+      }
     }
   }
   return highest;
@@ -17,7 +20,7 @@ function getHighestSalary(member) {
 
 module.exports = {
   name: 'collect',
-  description: 'Recoge tu sueldo según tu rol (con animación)',
+  description: 'Recoge tu sueldo según tu rol (sistema profesional)',
   execute: async (message, args, client) => {
     const userId = message.author.id;
     const member = message.member;
@@ -32,7 +35,7 @@ module.exports = {
       return message.reply('No tienes ningún rol de sueldo asignado.');
     }
 
-    // === ANIMACIÓN DE BARRA DE PROGRESO ===
+    // Animación de barra de progreso
     const progressEmbed = new EmbedBuilder()
       .setColor(colors.warning)
       .setTitle('⏳ Recogiendo sueldo...')
@@ -40,19 +43,16 @@ module.exports = {
 
     const progressMsg = await message.reply({ embeds: [progressEmbed] });
 
-    // Paso 1
     await new Promise(r => setTimeout(r, 700));
     await progressMsg.edit({
       embeds: [progressEmbed.setDescription(createProgressBar(4, 10))]
     });
 
-    // Paso 2
     await new Promise(r => setTimeout(r, 600));
     await progressMsg.edit({
       embeds: [progressEmbed.setDescription(createProgressBar(8, 10))]
     });
 
-    // Paso 3 - Entregar dinero
     await new Promise(r => setTimeout(r, 500));
 
     addCash(userId, salary);
