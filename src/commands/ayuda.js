@@ -1,16 +1,11 @@
 const { EmbedBuilder } = require('discord.js');
-
-const STAFF_ROLE_ID = process.env.STAFF_ROLE_ID || '1508320073784496159';
-
-function hasStaffRole(member) {
-  return member.roles.cache.has(STAFF_ROLE_ID);
-}
+const { isStaff } = require('../utils/permissions');
 
 module.exports = {
   name: 'ayuda',
   description: 'Muestra la lista de comandos',
   execute: async (message, args, client) => {
-    const isStaff = hasStaffRole(message.member);
+    const staff = isStaff(message.member);
 
     const embed = new EmbedBuilder()
       .setColor('#2C3E50')
@@ -28,7 +23,7 @@ module.exports = {
       inline: false
     });
 
-    if (isStaff) {
+    if (staff) {
       embed.addFields({
         name: '🔐 Comandos Staff',
         value: [

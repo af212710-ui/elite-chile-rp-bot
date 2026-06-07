@@ -1,17 +1,13 @@
 const { getDNI, deleteDNI } = require('../utils/database');
 const redis = require('../utils/redis');
-const STAFF_ROLE_ID = process.env.STAFF_ROLE_ID || '1508320073784496159';
+const { isStaff } = require('../utils/permissions');
 const CIVIL_ROLE_ID = process.env.CIVIL_ROLE_ID;
-
-function hasStaffRole(member) {
-  return member.roles.cache.has(STAFF_ROLE_ID);
-}
 
 module.exports = {
   name: 'eliminardni',
   description: 'Eliminar DNI de un usuario (solo staff)',
   execute: async (message, args, client) => {
-    if (!hasStaffRole(message.member)) {
+    if (!isStaff(message.member)) {
       return message.reply('Solo el staff puede eliminar DNIs.');
     }
 
@@ -35,8 +31,6 @@ module.exports = {
     }
 
     deleteDNI(mentioned.id);
-
-    // Eliminar del caché de Redis
     await redis.del(`dni:${mentioned.id}`);
 
     return message.reply(`✅ DNI de **${mentioned.username}** eliminado correctamente.`);

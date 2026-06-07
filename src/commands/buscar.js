@@ -1,17 +1,12 @@
 const { searchDNIsByName } = require('../utils/database');
 const { EmbedBuilder } = require('discord.js');
-
-const STAFF_ROLE_ID = process.env.STAFF_ROLE_ID || '1508320073784496159';
-
-function hasStaffRole(member) {
-  return member.roles.cache.has(STAFF_ROLE_ID);
-}
+const { isStaff } = require('../utils/permissions');
 
 module.exports = {
   name: 'buscar',
   description: 'Buscar DNI por nombre (solo staff)',
   execute: async (message, args, client) => {
-    if (!hasStaffRole(message.member)) {
+    if (!isStaff(message.member)) {
       return message.reply('Solo el staff puede usar este comando.');
     }
 
@@ -26,7 +21,6 @@ module.exports = {
       return message.reply('No se encontró ningún DNI con ese nombre.');
     }
 
-    // Mostrar el primero que coincida
     const dni = results[0];
     const embed = new EmbedBuilder()
       .setColor('#2C3E50')
