@@ -13,7 +13,6 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Cargar comandos
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
@@ -25,12 +24,8 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', () => {
-  // Inicializar SQLite
   require('./utils/database').getDB();
-
-  // Inicializar Redis (se conecta automáticamente)
   require('./utils/redis');
-
   console.log(`\u2705 Bot conectado como ${client.user.tag}`);
   client.user.setActivity('Elite Chile RP', { type: 3 });
 });

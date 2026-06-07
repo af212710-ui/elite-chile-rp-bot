@@ -17,7 +17,10 @@ module.exports = {
       value: [
         '`ch!creadni Nombre, DD/MM/AAAA, Sexo, Nacionalidad`',
         '`ch!verdni` - Ver tu DNI',
-        '`ch!verdni @usuario` - Ver DNI de otra persona (solo staff)',
+        '`ch!bal` - Ver tu dinero (cartera + banco)',
+        '`ch!collect` - Recoger sueldo',
+        '`ch!deposit <cantidad>` - Depositar al banco',
+        '`ch!withdraw <cantidad>` - Retirar del banco',
         '`ch!ia Tu mensaje` - Hablar con la IA'
       ].join('\n'),
       inline: false
@@ -27,17 +30,10 @@ module.exports = {
       embed.addFields({
         name: '🔐 Comandos Staff',
         value: [
-          '`ch!buscar Nombre` - Buscar DNI por nombre',
-          '`ch!eliminardni @usuario` - Eliminar DNI',
-          '`ch!msg Tu mensaje` - El bot dice el mensaje (borra el tuyo)',
-          '`ch!ia Tu mensaje` - Usar la IA (sin rate limit)'
+          '`ch!buscar Nombre`',
+          '`ch!eliminardni @usuario`',
+          '`ch!msg Tu mensaje`'
         ].join('\n'),
-        inline: false
-      });
-    } else {
-      embed.addFields({
-        name: '🔐 Comandos Staff',
-        value: 'Solo visibles para miembros del staff.',
         inline: false
       });
     }

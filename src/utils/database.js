@@ -20,6 +20,8 @@ function getDB() {
 
 function initTables() {
   const database = getDB();
+
+  // Tabla de DNIs (ya existente)
   database.exec(`
     CREATE TABLE IF NOT EXISTS dnis (
       user_id TEXT PRIMARY KEY,
@@ -30,52 +32,91 @@ function initTables() {
       creado_en TEXT NOT NULL
     )
   `);
-}
 
-function createOrUpdateDNI(userId, { nombre, fecha_nacimiento, sexo, nacionalidad }) {
-  const database = getDB();
-  const stmt = database.prepare(`
-    INSERT INTO dnis (user_id, nombre, fecha_nacimiento, sexo, nacionalidad, creado_en)
-    VALUES (?, ?, ?, ?, ?, ?)
-    ON CONFLICT(user_id) DO UPDATE SET
-      nombre = excluded.nombre,
-      fecha_nacimiento = excluded.fecha_nacimiento,
-      sexo = excluded.sexo,
-      nacionalidad = excluded.nacionalidad,
-      creado_en = excluded.creado_en
+  // Nueva tabla de Economía
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS economy (
+      user_id TEXT PRIMARY KEY,
+      cash INTEGER DEFAULT 0,
+      bank INTEGER DEFAULT 0,
+      last_collect INTEGER DEFAULT 0
+    )
   `);
-  stmt.run(userId, nombre, fecha_nacimiento, sexo, nacionalidad, new Date().toISOString());
 }
 
-function getDNI(userId) {
+// ==================== FUNCIONES DE ECONOMÍA ====================
+
+function getOrCreateUser(userId) {
   const database = getDB();
-  const stmt = database.prepare('SELECT * FROM dnis WHERE user_id = ?');
-  return stmt.get(userId);
+  let user = database.prepare('SELECT * FROM economy WHERE user_id = ?').get(userId);
+  if (!user) {
+    database.prepare('INSERT INTO economy (user_id, cash, bank) VALUES (?, 0, 0)').run(userId);
+    user = { user_id: userId, cash: 0, bank: 0, last_collect: 0 };
+  }
+  return user;
 }
 
-function getAllDNIs() {
-  const database = getDB();
-  const stmt = database.prepare('SELECT * FROM dnis');
-  return stmt.all();
+function getBalance(userId) {
+  return getOrCreateUser(userId);
 }
 
-function deleteDNI(userId) {
+function updateBalance(userId, cash, bank) {
   const database = getDB();
-  const stmt = database.prepare('DELETE FROM dnis WHERE user_id = ?');
-  stmt.run(userId);
+  database.prepare(`
+    UPDATE economy SET cash = ?, bank = ? WHERE user_id = ?
+  `).run(cash, bank, userId);
 }
 
-function searchDNIsByName(term) {
+function addCash(userId, amount) {
+  const user = getOrCreateUser(userId);
+  updateBalance(userId, user.cash + amount, user.bank);
+}
+
+function addBank(userId, amount) {
+  const user = getOrCreateUser(userId);
+  updateBalance(userId, user.cash, user.bank + amount);
+}
+
+function deposit(userId, amount) {
+  const user = getOrCreateUser(userId);
+  if (user.cash < amount) return false;
+  updateBalance(userId, user.cash - amount, user.bank + amount);
+  return true;
+}
+
+function withdraw(userId, amount) {
+  const user = getOrCreateUser(userId);
+  if (user.bank < amount) return false;
+  updateBalance(userId, user.cash + amount, user.bank - amount);
+  return true;
+}
+
+function canCollect(userId) {
+  const user = getOrCreateUser(userId);
+  const now = Date.now();
+  const fourHours = 4 * 60 * 60 * 1000;
+  return (now - user.last_collect) >= fourHours;
+}
+
+function updateLastCollect(userId) {
   const database = getDB();
-  const stmt = database.prepare('SELECT * FROM dnis WHERE LOWER(nombre) LIKE ?');
-  return stmt.all(`%${term.toLowerCase()}%`);
+  database.prepare('UPDATE economy SET last_collect = ? WHERE user_id = ?').run(Date.now(), userId);
 }
 
 module.exports = {
   getDB,
-  createOrUpdateDNI,
+  // DNI functions...
+  createOrUpdateDNI: require('./database').createOrUpdateDNI || (() => {}),
   getDNI,
   getAllDNIs,
   deleteDNI,
-  searchDNIsByName
+  searchDNIsByName,
+  // Economy functions
+  getBalance,
+  addCash,
+  addBank,
+  deposit,
+  withdraw,
+  canCollect,
+  updateLastCollect
 };
