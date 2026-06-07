@@ -1,18 +1,12 @@
-# 🤖 Elite Chile RP Bot
+# Elite Chile RP Bot
 
-Bot oficial de Discord para **Elite Chile Roleplay Community** — el servidor de GTA V FiveM Roleplay más brígido de Chile.
+Bot base limpio y profesional para la comunidad **Elite Chile Roleplay** (GTA V FiveM).
 
-## ✨ Características actuales (v1.0)
+Este es el proyecto inicial. **Sin comandos todavía**. Vamos a construirlo paso a paso, limpio y profesional, tal como lo vayas pidiendo.
 
-- Comandos slash modernos y rápidos
-- Sistema de `/reglas` con embed profesional
-- `/info` con detalles de la comunidad
-- Fácil de extender con más comandos RP
-- Totalmente en español
+## Instalación
 
-## 🚀 Instalación rápida
-
-1. Clona este repositorio:
+1. Clona el repositorio:
    ```bash
    git clone https://github.com/af212710-ui/elite-chile-rp-bot.git
    cd elite-chile-rp-bot
@@ -23,42 +17,36 @@ Bot oficial de Discord para **Elite Chile Roleplay Community** — el servidor d
    npm install
    ```
 
-3. Crea tu archivo `.env`:
+3. Crea el archivo de entorno:
    ```bash
    cp .env.example .env
    ```
-   Edita `.env` y pon tu `DISCORD_TOKEN` y `CLIENT_ID` (obténlos en el [Discord Developer Portal](https://discord.com/developers/applications))
 
-4. Inicia el bot:
+4. Edita `.env` y agrega:
+   - `DISCORD_TOKEN` = token de tu bot
+   - `CLIENT_ID` = Application ID de tu bot
+
+5. Inicia el bot:
    ```bash
    npm start
    ```
 
-## 📋 Comandos disponibles
+## Estado actual (v1.1 - Base limpia)
 
-| Comando   | Descripción                                      |
-|-----------|---------------------------------------------------|
-| `/ping`   | Muestra la latencia del bot                       |
-| `/reglas` | Muestra las reglas principales del servidor RP    |
-| `/info`   | Información sobre Elite Chile Roleplay         |
+- Bot conecta correctamente
+- Actividad simple y profesional
+- Estructura lista para agregar lo que necesites
+- **Sin comandos**
+- **Sin emojis excesivos** (estilo limpio y serio)
 
-## 🛠️ Próximas features recomendadas
+## Cómo seguir
 
-- Sistema de verificación (vincular Discord con personaje in-game)
-- Aplicaciones de whitelist con modals bonitos
-- Sistema de tickets para soporte al jugador
-- Comandos de facciones y economía RP
-- Mensaje de bienvenida automático
-- Logs de moderación
-- Base de datos (SQLite o MongoDB)
-- Integración con el servidor FiveM
+Dime qué quieres agregar y lo hacemos de forma limpia:
+- Primer comando básico (sin emojis)
+- Sistema de verificación
+- Aplicaciones de whitelist
+- Tickets de soporte
+- Comandos de facciones
+- Lo que necesites para Elite Chile RP
 
-¿Cuál quieres que agreguemos primero? ¡Dime y lo hacemos!
-
-## 👋 Contribuir
-
-Este bot es para la comunidad. Si tienes ideas, sugerencias o quieres agregar comandos específicos de tu facción, avísame.
-
-¡Vamos a construir el mejor bot para el mejor server de roleplay de Chile! 🔥
-
-**Desarrollado con cariño para Elite Chile RP**
+Cuando me digas la siguiente feature, la implementamos ya.
