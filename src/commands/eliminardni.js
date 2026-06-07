@@ -1,18 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const { EmbedBuilder } = require('discord.js');
-
-const dataPath = path.join(__dirname, '..', '..', 'data', 'dnis.json');
+const { getDNI, deleteDNI } = require('../utils/database');
 const STAFF_ROLE_ID = process.env.STAFF_ROLE_ID || '1508320073784496159';
 const CIVIL_ROLE_ID = process.env.CIVIL_ROLE_ID;
-
-function loadDNIs() {
-  try { return JSON.parse(fs.readFileSync(dataPath, 'utf8') || '{}'); } catch { return {}; }
-}
-
-function saveDNIs(data) {
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
-}
 
 function hasStaffRole(member) {
   return member.roles.cache.has(STAFF_ROLE_ID);
@@ -31,8 +19,8 @@ module.exports = {
       return message.reply('Uso: `ch!eliminardni @usuario`');
     }
 
-    const dnis = loadDNIs();
-    if (!dnis[mentioned.id]) {
+    const dni = getDNI(mentioned.id);
+    if (!dni) {
       return message.reply('Esa persona no tiene DNI registrado.');
     }
 
@@ -45,8 +33,7 @@ module.exports = {
       } catch(e){}
     }
 
-    delete dnis[mentioned.id];
-    saveDNIs(dnis);
+    deleteDNI(mentioned.id);
 
     return message.reply(`✅ DNI de **${mentioned.username}** eliminado correctamente.`);
   }

@@ -13,7 +13,7 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Cargar comandos automáticamente (Command Handler)
+// Cargar comandos automáticamente
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
@@ -21,16 +21,16 @@ for (const file of commandFiles) {
   const command = require(path.join(commandsPath, file));
   if (command.name) {
     client.commands.set(command.name, command);
-    console.log(`[Handler] Comando cargado: ${command.name}`);
   }
 }
 
 client.once('ready', () => {
+  // Inicializar base de datos SQLite
+  require('./utils/database').getDB();
   console.log(`\u2705 Bot conectado como ${client.user.tag}`);
   client.user.setActivity('Elite Chile RP', { type: 3 });
 });
 
-// Manejador de mensajes con prefijo ch!
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
   if (!message.guild) return;
@@ -40,7 +40,6 @@ client.on('messageCreate', async (message) => {
   const commandName = args.shift().toLowerCase();
 
   const command = client.commands.get(commandName);
-
   if (command) {
     try {
       await command.execute(message, args, client);

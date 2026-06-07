@@ -1,22 +1,5 @@
-const fs = require('fs');
-const path = require('path');
-
-const dataPath = path.join(__dirname, '..', '..', 'data', 'dnis.json');
+const { createOrUpdateDNI } = require('../utils/database');
 const CIVIL_ROLE_ID = process.env.CIVIL_ROLE_ID;
-
-function loadDNIs() {
-  try {
-    if (!fs.existsSync(dataPath)) {
-      fs.mkdirSync(path.dirname(dataPath), { recursive: true });
-      fs.writeFileSync(dataPath, '{}');
-    }
-    return JSON.parse(fs.readFileSync(dataPath, 'utf8') || '{}');
-  } catch { return {}; }
-}
-
-function saveDNIs(data) {
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
-}
 
 function isValidRealDate(dateStr) {
   const [d, m, y] = dateStr.split('/').map(Number);
@@ -36,7 +19,7 @@ module.exports = {
 
     const parts = rest.split(',').map(p => p.trim());
     if (parts.length < 4) {
-      return message.reply('Formato incorrecto. Ejemplo: `ch!creadni Jesus Matias Luz Martinez, 15/03/1995, Masculino, Chilena`');
+      return message.reply('Formato: `ch!creadni Jesus Matias Luz Martinez, 15/03/1995, Masculino, Chilena`');
     }
 
     const [nombre, fecha, sexoRaw, nacionalidad] = parts;
@@ -49,15 +32,12 @@ module.exports = {
     if (sexo === 'm' || sexo === 'masculino') sexo = 'Masculino';
     else if (sexo === 'f' || sexo === 'femenino') sexo = 'Femenino';
 
-    const dnis = loadDNIs();
-    dnis[message.author.id] = {
+    createOrUpdateDNI(message.author.id, {
       nombre,
       fecha_nacimiento: fecha,
       sexo,
-      nacionalidad,
-      creado_en: new Date().toISOString()
-    };
-    saveDNIs(dnis);
+      nacionalidad
+    });
 
     if (CIVIL_ROLE_ID) {
       try { await message.member.roles.add(CIVIL_ROLE_ID); } catch (e) {}
