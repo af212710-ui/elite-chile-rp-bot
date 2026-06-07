@@ -1,5 +1,7 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const fs = require('fs');
+const path = require('path');
 
 const client = new Client({
   intents: [
@@ -9,11 +11,26 @@ const client = new Client({
   ]
 });
 
+client.commands = new Collection();
+
+// Cargar comandos automáticamente (Command Handler)
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+  const command = require(path.join(commandsPath, file));
+  if (command.name) {
+    client.commands.set(command.name, command);
+    console.log(`[Handler] Comando cargado: ${command.name}`);
+  }
+}
+
 client.once('ready', () => {
   console.log(`\u2705 Bot conectado como ${client.user.tag}`);
   client.user.setActivity('Elite Chile RP', { type: 3 });
 });
 
+// Manejador de mensajes con prefijo ch!
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
   if (!message.guild) return;
@@ -22,31 +39,14 @@ client.on('messageCreate', async (message) => {
   const args = message.content.slice(2).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  // Nuevos comandos DNI
-  const dniCommands = {
-    'creadni': './commands/creadni',
-    'verdni': './commands/verdni',
-    'buscar': './commands/buscar',
-    'eliminardni': './commands/eliminardni'
-  };
+  const command = client.commands.get(commandName);
 
-  if (dniCommands[commandName]) {
+  if (command) {
     try {
-      const cmd = require(dniCommands[commandName]);
-      await cmd(message, args, client);
+      await command.execute(message, args, client);
     } catch (error) {
       console.error(error);
       message.reply('Ocurri\u00f3 un error al ejecutar el comando.');
-    }
-  }
-
-  if (commandName === 'ayuda') {
-    try {
-      const ayudaCommand = require('./commands/ayuda');
-      await ayudaCommand(message, args, client);
-    } catch (error) {
-      console.error(error);
-      message.reply('Ocurri\u00f3 un error.');
     }
   }
 });
