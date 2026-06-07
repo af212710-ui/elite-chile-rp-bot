@@ -21,7 +21,6 @@ function getDB() {
 function initTables() {
   const database = getDB();
 
-  // Tabla de DNIs (ya existente)
   database.exec(`
     CREATE TABLE IF NOT EXISTS dnis (
       user_id TEXT PRIMARY KEY,
@@ -33,7 +32,6 @@ function initTables() {
     )
   `);
 
-  // Nueva tabla de Economía
   database.exec(`
     CREATE TABLE IF NOT EXISTS economy (
       user_id TEXT PRIMARY KEY,
@@ -44,7 +42,7 @@ function initTables() {
   `);
 }
 
-// ==================== FUNCIONES DE ECONOMÍA ====================
+// ==================== ECONOMÍA ====================
 
 function getOrCreateUser(userId) {
   const database = getDB();
@@ -62,19 +60,12 @@ function getBalance(userId) {
 
 function updateBalance(userId, cash, bank) {
   const database = getDB();
-  database.prepare(`
-    UPDATE economy SET cash = ?, bank = ? WHERE user_id = ?
-  `).run(cash, bank, userId);
+  database.prepare(`UPDATE economy SET cash = ?, bank = ? WHERE user_id = ?`).run(cash, bank, userId);
 }
 
 function addCash(userId, amount) {
   const user = getOrCreateUser(userId);
   updateBalance(userId, user.cash + amount, user.bank);
-}
-
-function addBank(userId, amount) {
-  const user = getOrCreateUser(userId);
-  updateBalance(userId, user.cash, user.bank + amount);
 }
 
 function deposit(userId, amount) {
@@ -103,20 +94,24 @@ function updateLastCollect(userId) {
   database.prepare('UPDATE economy SET last_collect = ? WHERE user_id = ?').run(Date.now(), userId);
 }
 
+// Nueva función para Leaderboard
+function getTopUsers(limit = 10) {
+  const database = getDB();
+  return database.prepare(`
+    SELECT user_id, cash, bank, (cash + bank) as total 
+    FROM economy 
+    ORDER BY total DESC 
+    LIMIT ?
+  `).all(limit);
+}
+
 module.exports = {
   getDB,
-  // DNI functions...
-  createOrUpdateDNI: require('./database').createOrUpdateDNI || (() => {}),
-  getDNI,
-  getAllDNIs,
-  deleteDNI,
-  searchDNIsByName,
-  // Economy functions
   getBalance,
   addCash,
-  addBank,
   deposit,
   withdraw,
   canCollect,
-  updateLastCollect
+  updateLastCollect,
+  getTopUsers
 };
