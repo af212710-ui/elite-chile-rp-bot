@@ -7,14 +7,15 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js"
   },
-  "keywords": ["discord", "bot", "roleplay", "fivem", "chile", "elite-rp", "gta"],
+  "keywords": ["discord", "bot", "roleplay", "fivem", "chile", "elite-rp", "gta", "ia"],
   "author": "Elite Chile RP",
   "license": "MIT",
   "dependencies": {
     "better-sqlite3": "^11.5.0",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
-    "ioredis": "^5.4.1"
+    "ioredis": "^5.4.1",
+    "openai": "^4.78.0"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -1,30 +1,32 @@
 # Elite Chile RP Bot
 
-## Integración con Redis (Cache)
+## Integración con IA (Grok / OpenAI)
 
-El bot ahora usa **Redis** para cachear los DNIs y mejorar el rendimiento.
+El bot ahora tiene un comando de **Inteligencia Artificial** usando la API de Grok (xAI) o compatible con OpenAI.
 
-### Cómo configurar Redis
+### Configuración de la IA
 
-1. Instala Redis localmente o usa un servicio en la nube (Upstash, Redis Cloud, etc.)
-2. Define la variable de entorno:
-   ```
-   REDIS_URL=redis://localhost:6379
-   ```
-   O usa la URL que te dé tu proveedor.
+Agrega en tu `.env`:
 
-### Beneficios
-- `ch!verdni` y `ch!buscar` son mucho más rápidos
-- Menos carga en SQLite
-- Los datos se invalidan automáticamente al crear o eliminar un DNI
+```env
+XAI_API_KEY=tu_clave_de_xai
+AI_MODEL=grok-3
+AI_BASE_URL=https://api.x.ai/v1
+```
 
-## Comandos
+O si usas OpenAI normal:
+```env
+XAI_API_KEY=sk-...
+AI_MODEL=gpt-4o
+AI_BASE_URL=https://api.openai.com/v1
+```
 
-### Civiles
-- `ch!creadni Nombre completo, DD/MM/AAAA, Sexo, Nacionalidad`
-- `ch!verdni`
+### Comando
+- `ch!ia Tu mensaje aquí`
 
-### Staff
-- `ch!verdni @usuario`
-- `ch!buscar Nombre`
-- `ch!eliminardni @usuario`
+La IA responde en español y está configurada para ser útil en el contexto del servidor RP.
+
+### Notas
+- Tiene rate limiting (1 uso por minuto para civiles)
+- El staff no tiene límite
+- Se recomienda usar Grok por su buen rendimiento en español

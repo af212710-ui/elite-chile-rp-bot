@@ -22,7 +22,8 @@ module.exports = {
       value: [
         '`ch!creadni Nombre, DD/MM/AAAA, Sexo, Nacionalidad`',
         '`ch!verdni` - Ver tu DNI',
-        '`ch!verdni @usuario` - Ver DNI de otra persona (solo staff)'
+        '`ch!verdni @usuario` - Ver DNI de otra persona (solo staff)',
+        '`ch!ia Tu mensaje` - Hablar con la IA del servidor'
       ].join('\n'),
       inline: false
     });
@@ -33,7 +34,7 @@ module.exports = {
         value: [
           '`ch!buscar Nombre` - Buscar DNI por nombre',
           '`ch!eliminardni @usuario` - Eliminar DNI',
-          '`ch!verdni @usuario` - Ver DNI de cualquier persona'
+          '`ch!ia Tu mensaje` - Usar la IA (sin rate limit)'
         ].join('\n'),
         inline: false
       });
