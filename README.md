@@ -1,22 +1,16 @@
 # Elite Chile RP Bot
 
-## Integración con IA (con Memoria de Conversación)
+## Comando Staff: ch!msg
 
-El bot tiene un comando de **Inteligencia Artificial** con **memoria de conversación**.
+`ch!msg Tu mensaje aquí`
 
-### Características
-- `ch!ia Tu mensaje` - Habla con la IA
-- La IA recuerda los últimos mensajes de la conversación
-- `ch!ia limpiar` - Borra la memoria de la conversación
-- Rate limiting (1 minuto entre usos para civiles)
+- El bot borra tu mensaje original
+- Envía el texto como si lo estuviera diciendo el bot
+- Solo disponible para miembros del staff
 
-### Configuración
-Agrega en tu `.env`:
-
-```env
-XAI_API_KEY=tu_clave
-AI_MODEL=grok-3
-AI_BASE_URL=https://api.x.ai/v1
+Ejemplo:
 ```
-
-La IA está optimizada para español y contexto de Roleplay.
+ch!msg Bienvenidos al servidor
+```
+El bot borrará tu mensaje y dirá:
+**Bienvenidos al servidor**
