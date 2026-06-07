@@ -1,7 +1,9 @@
 const { getDNI } = require('../utils/database');
+const redis = require('../utils/redis');
 const { EmbedBuilder } = require('discord.js');
 
 const STAFF_ROLE_ID = process.env.STAFF_ROLE_ID || '1508320073784496159';
+const CACHE_TTL = 300; // 5 minutos en segundos
 
 function hasStaffRole(member) {
   return member.roles.cache.has(STAFF_ROLE_ID);
@@ -25,7 +27,21 @@ module.exports = {
       title = `DNI de ${mentioned.username}`;
     }
 
-    const dni = getDNI(targetId);
+    // Intentar obtener desde Redis primero (caché)
+    const cacheKey = `dni:${targetId}`;
+    let dni = await redis.get(cacheKey);
+
+    if (dni) {
+      dni = JSON.parse(dni);
+    } else {
+      // No está en caché → buscar en SQLite
+      dni = getDNI(targetId);
+      if (dni) {
+        // Guardar en Redis con expiración
+        await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(dni));
+      }
+    }
+
     if (!dni) {
       return message.reply(mentioned ? 'Esa persona no tiene DNI registrado.' : 'No tienes DNI registrado. Usa `ch!creadni`.');
     }

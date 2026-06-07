@@ -13,7 +13,7 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Cargar comandos automáticamente
+// Cargar comandos
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
@@ -25,8 +25,12 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', () => {
-  // Inicializar base de datos SQLite
+  // Inicializar SQLite
   require('./utils/database').getDB();
+
+  // Inicializar Redis (se conecta automáticamente)
+  require('./utils/redis');
+
   console.log(`\u2705 Bot conectado como ${client.user.tag}`);
   client.user.setActivity('Elite Chile RP', { type: 3 });
 });
@@ -45,7 +49,7 @@ client.on('messageCreate', async (message) => {
       await command.execute(message, args, client);
     } catch (error) {
       console.error(error);
-      message.reply('Ocurri\u00f3 un error al ejecutar el comando.');
+      message.reply('Ocurrió un error al ejecutar el comando.');
     }
   }
 });

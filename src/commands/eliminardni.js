@@ -1,4 +1,5 @@
 const { getDNI, deleteDNI } = require('../utils/database');
+const redis = require('../utils/redis');
 const STAFF_ROLE_ID = process.env.STAFF_ROLE_ID || '1508320073784496159';
 const CIVIL_ROLE_ID = process.env.CIVIL_ROLE_ID;
 
@@ -34,6 +35,9 @@ module.exports = {
     }
 
     deleteDNI(mentioned.id);
+
+    // Eliminar del caché de Redis
+    await redis.del(`dni:${mentioned.id}`);
 
     return message.reply(`✅ DNI de **${mentioned.username}** eliminado correctamente.`);
   }

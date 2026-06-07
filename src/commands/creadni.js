@@ -1,4 +1,5 @@
 const { createOrUpdateDNI } = require('../utils/database');
+const redis = require('../utils/redis');
 const CIVIL_ROLE_ID = process.env.CIVIL_ROLE_ID;
 
 function isValidRealDate(dateStr) {
@@ -38,6 +39,9 @@ module.exports = {
       sexo,
       nacionalidad
     });
+
+    // Invalidar caché anterior si existe
+    await redis.del(`dni:${message.author.id}`);
 
     if (CIVIL_ROLE_ID) {
       try { await message.member.roles.add(CIVIL_ROLE_ID); } catch (e) {}
