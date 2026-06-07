@@ -1,7 +1,5 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
 
 const client = new Client({
   intents: [
@@ -16,7 +14,6 @@ client.once('ready', () => {
   client.user.setActivity('Elite Chile RP', { type: 3 });
 });
 
-// Manejador de comandos prefix ch!
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
   if (!message.guild) return;
@@ -25,10 +22,18 @@ client.on('messageCreate', async (message) => {
   const args = message.content.slice(2).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  if (commandName === 'dni') {
+  // Nuevos comandos DNI
+  const dniCommands = {
+    'creadni': './commands/creadni',
+    'verdni': './commands/verdni',
+    'buscar': './commands/buscar',
+    'eliminardni': './commands/eliminardni'
+  };
+
+  if (dniCommands[commandName]) {
     try {
-      const dniCommand = require('./commands/dni');
-      await dniCommand(message, args, client);
+      const cmd = require(dniCommands[commandName]);
+      await cmd(message, args, client);
     } catch (error) {
       console.error(error);
       message.reply('Ocurri\u00f3 un error al ejecutar el comando.');
@@ -41,7 +46,7 @@ client.on('messageCreate', async (message) => {
       await ayudaCommand(message, args, client);
     } catch (error) {
       console.error(error);
-      message.reply('Ocurri\u00f3 un error al mostrar la ayuda.');
+      message.reply('Ocurri\u00f3 un error.');
     }
   }
 });

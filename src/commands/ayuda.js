@@ -11,40 +11,37 @@ module.exports = async (message, args, client) => {
 
   const embed = new EmbedBuilder()
     .setColor('#2C3E50')
-    .setTitle('Ayuda - Elite Chile RP')
-    .setDescription('Lista de comandos disponibles');
+    .setTitle('📋 Ayuda - Elite Chile RP')
+    .setDescription('Comandos del sistema DNI');
 
-  // Comandos Civiles
   embed.addFields({
     name: '👤 Comandos Civiles',
     value: [
-      '`ch!dni crear Nombre, DD/MM/AAAA, Sexo, Nacionalidad`',
-      '`ch!dni info` - Ver tu DNI',
-      '`ch!dni buscar @usuario` o `ch!dni buscar Nombre`'
+      '`ch!creadni Nombre, DD/MM/AAAA, Sexo, Nacionalidad` - Crear tu DNI',
+      '`ch!verdni` - Ver tu propio DNI',
+      '`ch!verdni @usuario` - Ver DNI de otra persona (solo staff)'
     ].join('\n'),
     inline: false
   });
 
-  // Comandos Staff (solo visibles si tienes el rol)
   if (isStaff) {
     embed.addFields({
       name: '🔐 Comandos Staff',
       value: [
-        'Actualmente solo comandos civiles disponibles.',
-        'Más comandos de staff se agregarán pronto.',
-        'El bot ya reconoce tu rol de Staff.'
+        '`ch!buscar Nombre` - Buscar DNI por nombre',
+        '`ch!eliminardni @usuario` - Eliminar el DNI de alguien',
+        '`ch!verdni @usuario` - Ver DNI de cualquier persona'
       ].join('\n'),
       inline: false
     });
   } else {
     embed.addFields({
       name: '🔐 Comandos Staff',
-      value: 'Solo visibles para miembros del staff.',
+      value: 'Solo visibles para el staff.',
       inline: false
     });
   }
 
-  embed.setFooter({ text: 'Elite Chile RP • Usa los comandos con prefijo ch!' });
-
+  embed.setFooter({ text: 'Elite Chile RP • Prefijo: ch!' });
   return message.reply({ embeds: [embed] });
 };
