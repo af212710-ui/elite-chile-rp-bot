@@ -2,7 +2,7 @@ const { getBalance, deposit } = require('../utils/database');
 
 module.exports = {
   name: 'deposit',
-  description: 'Deposita dinero al banco',
+  description: 'Deposita dinero de tu cartera al banco',
   execute: async (message, args, client) => {
     const amount = parseInt(args[0]);
 

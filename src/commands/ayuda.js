@@ -21,6 +21,7 @@ module.exports = {
         '`ch!collect` - Recoger sueldo',
         '`ch!deposit <cantidad>` - Depositar al banco',
         '`ch!withdraw <cantidad>` - Retirar del banco',
+        '`ch!pagar @usuario <cantidad>` - Pagar dinero a alguien',
         '`ch!ia Tu mensaje` - Hablar con la IA'
       ].join('\n'),
       inline: false

@@ -2,7 +2,7 @@ const { getBalance, withdraw } = require('../utils/database');
 
 module.exports = {
   name: 'withdraw',
-  description: 'Retira dinero del banco',
+  description: 'Retira dinero del banco a tu cartera',
   execute: async (message, args, client) => {
     const amount = parseInt(args[0]);
 
