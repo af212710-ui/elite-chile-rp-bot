@@ -16,7 +16,7 @@ module.exports = {
 
     const amount = parseInt(args[1]);
     if (!amount || amount <= 0) {
-      return message.reply('Debes especificar una cantidad válida.');
+      return message.reply('Debes especificar una cantidad válida mayor a 0.');
     }
 
     const destino = (args[2] || '').toLowerCase();

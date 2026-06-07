@@ -35,7 +35,8 @@ module.exports = {
           '`ch!buscar Nombre`',
           '`ch!eliminardni @usuario`',
           '`ch!msg Tu mensaje`',
-          '`ch!dardinero @usuario <monto> <cartera/banco>` - Dar dinero'
+          '`ch!dardinero @usuario <monto> <cartera/banco>` - Dar dinero',
+          '`ch!quitardinero @usuario <monto> <cartera/banco>` - Quitar dinero'
         ].join('\n'),
         inline: false
       });
