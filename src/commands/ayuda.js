@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const { isStaff } = require('../utils/permissions');
-const colors = require('../config/colors');
 
 module.exports = {
   name: 'ayuda',
@@ -9,7 +8,7 @@ module.exports = {
     const staff = isStaff(message.member);
 
     const embed = new EmbedBuilder()
-      .setColor(colors.primary)
+      .setColor('#2C3E50')
       .setTitle('📋 Ayuda - Elite Chile RP')
       .setDescription('Comandos disponibles del bot');
 
@@ -35,7 +34,8 @@ module.exports = {
         value: [
           '`ch!buscar Nombre`',
           '`ch!eliminardni @usuario`',
-          '`ch!msg Tu mensaje`'
+          '`ch!msg Tu mensaje`',
+          '`ch!dardinero @usuario <monto> <cartera/banco>` - Dar dinero'
         ].join('\n'),
         inline: false
       });
