@@ -1,52 +1,24 @@
 # Elite Chile RP Bot
 
-Bot base limpio y profesional para la comunidad **Elite Chile Roleplay** (GTA V FiveM).
+Bot base limpio y profesional para la comunidad **Elite Chile Roleplay**.
 
-Este es el proyecto inicial. **Sin comandos todavía**. Vamos a construirlo paso a paso, limpio y profesional, tal como lo vayas pidiendo.
+## Sistema DNI implementado
 
-## Instalación
+### Comandos disponibles:
 
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/af212710-ui/elite-chile-rp-bot.git
-   cd elite-chile-rp-bot
-   ```
+- `ch!dni crear Nombre completo, DD/MM/AAAA, Sexo, Nacionalidad`
+  Ejemplo: `ch!dni crear Jesus Matias Luz Martinez, 15/03/1995, Masculino, Chilena`
 
-2. Instala dependencias:
-   ```bash
-   npm install
-   ```
+- `ch!dni info` → Muestra tu DNI registrado
 
-3. Crea el archivo de entorno:
-   ```bash
-   cp .env.example .env
-   ```
+- `ch!dni buscar @usuario` → Muestra el DNI de otra persona
 
-4. Edita `.env` y agrega:
-   - `DISCORD_TOKEN` = token de tu bot
-   - `CLIENT_ID` = Application ID de tu bot
+- `ch!dni buscar Nombre` → Busca por nombre
 
-5. Inicia el bot:
-   ```bash
-   npm start
-   ```
+### Base de datos
+Se guarda en `data/dnis.json` (JSON simple y limpio).
 
-## Estado actual (v1.1 - Base limpia)
+### Estilo
+Diseño limpio, profesional, sin emojis excesivos ni estilo IA.
 
-- Bot conecta correctamente
-- Actividad simple y profesional
-- Estructura lista para agregar lo que necesites
-- **Sin comandos**
-- **Sin emojis excesivos** (estilo limpio y serio)
-
-## Cómo seguir
-
-Dime qué quieres agregar y lo hacemos de forma limpia:
-- Primer comando básico (sin emojis)
-- Sistema de verificación
-- Aplicaciones de whitelist
-- Tickets de soporte
-- Comandos de facciones
-- Lo que necesites para Elite Chile RP
-
-Cuando me digas la siguiente feature, la implementamos ya.
+El bot usa prefijo `ch!` tal como pediste.
