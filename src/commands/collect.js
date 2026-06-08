@@ -1,4 +1,4 @@
-const { getBalance, addCash, canCollect, updateLastCollect } = require('../utils/database');
+const { getBalance, addCash, canCollect, updateLastCollect, getLastCollect } = require('../utils/database');
 const { EmbedBuilder } = require('discord.js');
 const colors = require('../config/colors');
 const { createProgressBar } = require('../utils/progressBar');
@@ -15,15 +15,36 @@ function getHighestSalary(member) {
   return highest;
 }
 
+function getTimeRemaining(lastCollect) {
+  const now = Date.now();
+  const weekInMs = 7 * 24 * 60 * 60 * 1000;
+  const timePassed = now - lastCollect;
+  const remaining = weekInMs - timePassed;
+
+  if (remaining <= 0) return null;
+
+  const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  return `${days} día(s) y ${hours} hora(s)`;
+}
+
 module.exports = {
   name: 'collect',
-  description: 'Recoge tu sueldo semanal según tu rol',
+  description: 'Reclamar sueldo semanal',
   execute: async (message, args, client) => {
     const userId = message.author.id;
     const member = message.member;
 
+    const lastCollect = getLastCollect ? getLastCollect(userId) : 0;
+
     if (!canCollect(userId)) {
-      return message.reply('Ya recogiste tu sueldo esta semana. Puedes volver a reclamar el próximo reinicio semanal.');
+      const remaining = getTimeRemaining(lastCollect);
+      return message.reply(
+        remaining 
+          ? `Ya reclamaste tu sueldo esta semana. Podrás reclamar de nuevo en **${remaining}**.`
+          : 'Ya puedes reclamar tu sueldo.'
+      );
     }
 
     const salary = getHighestSalary(member);
@@ -60,7 +81,7 @@ module.exports = {
         `Recibiste **$${salary.toLocaleString()}** en tu cartera.\n\n` +
         `💵 **Cartera actual:** $${finalBalance.toLocaleString()}`
       )
-      .setFooter({ text: 'Puedes reclamar tu próximo sueldo la siguiente semana' });
+      .setFooter({ text: 'Podrás reclamar tu próximo sueldo en 7 días' });
 
     await progressMsg.edit({ embeds: [finalEmbed] });
   }
