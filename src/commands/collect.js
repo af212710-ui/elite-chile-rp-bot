@@ -1,4 +1,4 @@
-const { getBalance, addCash, canCollect, updateLastCollect, getLastCollect } = require('../utils/database');
+const { getBalance, addCash, canCollect, updateLastCollect, getLastCollect, updateLastSalaryReminder, getLastSalaryReminder } = require('../utils/database');
 const { EmbedBuilder } = require('discord.js');
 const colors = require('../config/colors');
 const { createProgressBar } = require('../utils/progressBar');
@@ -36,9 +36,8 @@ module.exports = {
     const userId = message.author.id;
     const member = message.member;
 
-    const lastCollect = getLastCollect ? getLastCollect(userId) : 0;
-
     if (!canCollect(userId)) {
+      const lastCollect = getLastCollect(userId);
       const remaining = getTimeRemaining(lastCollect);
       return message.reply(
         remaining 

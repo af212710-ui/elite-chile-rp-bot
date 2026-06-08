@@ -37,7 +37,8 @@ function initTables() {
       user_id TEXT PRIMARY KEY,
       cash INTEGER DEFAULT 0,
       bank INTEGER DEFAULT 0,
-      last_collect INTEGER DEFAULT 0
+      last_collect INTEGER DEFAULT 0,
+      last_salary_reminder INTEGER DEFAULT 0
     )
   `);
 }
@@ -46,8 +47,8 @@ function getOrCreateUser(userId) {
   const database = getDB();
   let user = database.prepare('SELECT * FROM economy WHERE user_id = ?').get(userId);
   if (!user) {
-    database.prepare('INSERT INTO economy (user_id, cash, bank, last_collect) VALUES (?, 0, 0, 0)').run(userId);
-    user = { user_id: userId, cash: 0, bank: 0, last_collect: 0 };
+    database.prepare('INSERT INTO economy (user_id, cash, bank, last_collect, last_salary_reminder) VALUES (?, 0, 0, 0, 0)').run(userId);
+    user = { user_id: userId, cash: 0, bank: 0, last_collect: 0, last_salary_reminder: 0 };
   }
   return user;
 }
@@ -64,20 +65,6 @@ function updateBalance(userId, cash, bank) {
 function addCash(userId, amount) {
   const user = getOrCreateUser(userId);
   updateBalance(userId, user.cash + amount, user.bank);
-}
-
-function deposit(userId, amount) {
-  const user = getOrCreateUser(userId);
-  if (user.cash < amount) return false;
-  updateBalance(userId, user.cash - amount, user.bank + amount);
-  return true;
-}
-
-function withdraw(userId, amount) {
-  const user = getOrCreateUser(userId);
-  if (user.bank < amount) return false;
-  updateBalance(userId, user.cash + amount, user.bank - amount);
-  return true;
 }
 
 function canCollect(userId) {
@@ -97,13 +84,23 @@ function getLastCollect(userId) {
   return user.last_collect;
 }
 
+function updateLastSalaryReminder(userId) {
+  const database = getDB();
+  database.prepare('UPDATE economy SET last_salary_reminder = ? WHERE user_id = ?').run(Date.now(), userId);
+}
+
+function getLastSalaryReminder(userId) {
+  const user = getOrCreateUser(userId);
+  return user.last_salary_reminder;
+}
+
 module.exports = {
   getDB,
   getBalance,
   addCash,
-  deposit,
-  withdraw,
   canCollect,
   updateLastCollect,
-  getLastCollect
+  getLastCollect,
+  updateLastSalaryReminder,
+  getLastSalaryReminder
 };
