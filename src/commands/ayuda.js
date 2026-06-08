@@ -24,8 +24,7 @@ module.exports = {
         '`ch!deposit <cantidad>` - Depositar al banco',
         '`ch!withdraw <cantidad>` - Retirar del banco',
         '`ch!pagar @usuario <cantidad>` - Transferir dinero',
-        '`ch!leaderboard` - Top 10 más ricos',
-        '`ch!ia <mensaje>` - Hablar con la IA'
+        '`ch!leaderboard` - Top 10 más ricos'
       ].join('\n'),
       inline: false
     });
@@ -46,5 +45,5 @@ module.exports = {
 
     embed.setFooter({ text: 'Elite Chile RP • Sueldos semanales' });
     return message.reply({ embeds: [embed] });
-  }
+    }
 };
