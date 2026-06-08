@@ -41,6 +41,17 @@ function initTables() {
       last_salary_reminder INTEGER DEFAULT 0
     )
   `);
+
+  // Nueva tabla de preferencias de notificaciones
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS notification_preferences (
+      user_id TEXT PRIMARY KEY,
+      salary BOOLEAN DEFAULT 1,
+      payment_received BOOLEAN DEFAULT 1,
+      staff_give BOOLEAN DEFAULT 1,
+      staff_remove BOOLEAN DEFAULT 1
+    )
+  `);
 }
 
 function getOrCreateUser(userId) {
@@ -94,6 +105,37 @@ function getLastSalaryReminder(userId) {
   return user.last_salary_reminder;
 }
 
+// ==================== NOTIFICACIONES ====================
+
+function getNotificationPreferences(userId) {
+  const database = getDB();
+  let prefs = database.prepare('SELECT * FROM notification_preferences WHERE user_id = ?').get(userId);
+  if (!prefs) {
+    database.prepare(`
+      INSERT INTO notification_preferences (user_id, salary, payment_received, staff_give, staff_remove)
+      VALUES (?, 1, 1, 1, 1)
+    `).run(userId);
+    prefs = { user_id: userId, salary: 1, payment_received: 1, staff_give: 1, staff_remove: 1 };
+  }
+  return prefs;
+}
+
+function setNotificationPreference(userId, type, enabled) {
+  const database = getDB();
+  const validTypes = ['salary', 'payment_received', 'staff_give', 'staff_remove'];
+  if (!validTypes.includes(type)) return false;
+
+  getNotificationPreferences(userId); // Asegura que exista el registro
+
+  database.prepare(`UPDATE notification_preferences SET ${type} = ? WHERE user_id = ?`).run(enabled ? 1 : 0, userId);
+  return true;
+}
+
+function canReceiveNotification(userId, type) {
+  const prefs = getNotificationPreferences(userId);
+  return prefs[type] === 1;
+}
+
 module.exports = {
   getDB,
   getBalance,
@@ -102,5 +144,8 @@ module.exports = {
   updateLastCollect,
   getLastCollect,
   updateLastSalaryReminder,
-  getLastSalaryReminder
+  getLastSalaryReminder,
+  getNotificationPreferences,
+  setNotificationPreference,
+  canReceiveNotification
 };
