@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const { isStaff } = require('../utils/permissions');
-
 const colors = require('../config/colors');
 
 module.exports = {
@@ -12,21 +11,21 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor(colors.primary)
       .setTitle('📋 Ayuda - Elite Chile RP')
-      .setDescription('Prefijo: `ch!`');
+      .setDescription('Prefijo: `ch!` | Sueldos: **Semanal**');
 
     embed.addFields({
       name: '👤 Comandos Civiles',
       value: [
-        '`ch!creadni <nombre>, <DD/MM/AAAA>, <sexo>, <nacionalidad>`',
+        '`ch!creadni <nombre>, <DD/MM/AAAA>, <sexo>, <nacionalidad>` - Crear DNI',
         '`ch!verdni` - Ver tu DNI',
-        '`ch!verdni @usuario` - Ver DNI de otro (staff)',
+        '`ch!verdni @usuario` - Ver DNI de otro (solo staff)',
         '`ch!bal` - Ver tu dinero (cartera + banco)',
-        '`ch!collect` - Recoger sueldo',
+        '`ch!collect` - Reclamar sueldo **semanal**',
         '`ch!deposit <cantidad>` - Depositar al banco',
         '`ch!withdraw <cantidad>` - Retirar del banco',
         '`ch!pagar @usuario <cantidad>` - Transferir dinero',
         '`ch!leaderboard` - Top 10 más ricos',
-        '`ch!ia <mensaje>` - Hablar con la IA (Gratis con Groq)'
+        '`ch!ia <mensaje>` - Hablar con la IA'
       ].join('\n'),
       inline: false
     });
@@ -37,21 +36,15 @@ module.exports = {
         value: [
           '`ch!buscar <nombre>` - Buscar DNI',
           '`ch!eliminardni @usuario` - Eliminar DNI',
-          '`ch!msg <texto>` - El bot envía el mensaje',
+          '`ch!msg <texto>` - Enviar mensaje como bot',
           '`ch!dardinero @usuario <monto> <cartera/banco>` - Dar dinero',
           '`ch!quitardinero @usuario <monto> <cartera/banco>` - Quitar dinero'
         ].join('\n'),
         inline: false
       });
-    } else {
-      embed.addFields({
-        name: '🔐 Comandos Staff',
-        value: 'Solo visibles para el staff.',
-        inline: false
-      });
     }
 
-    embed.setFooter({ text: 'Elite Chile RP • Bot en desarrollo' });
+    embed.setFooter({ text: 'Elite Chile RP • Sueldos semanales' });
     return message.reply({ embeds: [embed] });
   }
 };
