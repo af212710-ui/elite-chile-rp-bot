@@ -42,13 +42,11 @@ function initTables() {
   `);
 }
 
-// ==================== ECONOMÍA ====================
-
 function getOrCreateUser(userId) {
   const database = getDB();
   let user = database.prepare('SELECT * FROM economy WHERE user_id = ?').get(userId);
   if (!user) {
-    database.prepare('INSERT INTO economy (user_id, cash, bank) VALUES (?, 0, 0)').run(userId);
+    database.prepare('INSERT INTO economy (user_id, cash, bank, last_collect) VALUES (?, 0, 0, 0)').run(userId);
     user = { user_id: userId, cash: 0, bank: 0, last_collect: 0 };
   }
   return user;
@@ -85,8 +83,8 @@ function withdraw(userId, amount) {
 function canCollect(userId) {
   const user = getOrCreateUser(userId);
   const now = Date.now();
-  const fourHours = 4 * 60 * 60 * 1000;
-  return (now - user.last_collect) >= fourHours;
+  const weekInMs = 7 * 24 * 60 * 60 * 1000;
+  return (now - user.last_collect) >= weekInMs;
 }
 
 function updateLastCollect(userId) {
@@ -94,15 +92,9 @@ function updateLastCollect(userId) {
   database.prepare('UPDATE economy SET last_collect = ? WHERE user_id = ?').run(Date.now(), userId);
 }
 
-// Nueva función para Leaderboard
-function getTopUsers(limit = 10) {
-  const database = getDB();
-  return database.prepare(`
-    SELECT user_id, cash, bank, (cash + bank) as total 
-    FROM economy 
-    ORDER BY total DESC 
-    LIMIT ?
-  `).all(limit);
+function getLastCollect(userId) {
+  const user = getOrCreateUser(userId);
+  return user.last_collect;
 }
 
 module.exports = {
@@ -113,5 +105,5 @@ module.exports = {
   withdraw,
   canCollect,
   updateLastCollect,
-  getTopUsers
+  getLastCollect
 };
